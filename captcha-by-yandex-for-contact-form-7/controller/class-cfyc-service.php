@@ -1,7 +1,18 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
-require_once ABSPATH . 'wp-content/plugins/contact-form-7/includes/integration.php';
+// Универсальный путь для Bedrock и стандартного WordPress
+if (file_exists(WP_PLUGIN_DIR . '/contact-form-7/includes/integration.php')) {
+    require_once WP_PLUGIN_DIR . '/contact-form-7/includes/integration.php';
+} elseif (file_exists(ABSPATH . 'wp-content/plugins/contact-form-7/includes/integration.php')) {
+    require_once ABSPATH . 'wp-content/plugins/contact-form-7/includes/integration.php';
+} else {
+    // Попытка найти файл через WordPress функции
+    $cf7_path = plugin_dir_path(dirname(plugin_dir_path(__FILE__))) . 'contact-form-7/includes/integration.php';
+    if (file_exists($cf7_path)) {
+        require_once $cf7_path;
+    }
+}
 
 if ( ! class_exists( 'WPCF7_Service' ) ) {
 	return;
