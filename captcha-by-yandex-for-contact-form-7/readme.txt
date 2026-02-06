@@ -2,7 +2,7 @@
 Contributors: stasionok
 Tags: contact form 7, yandex, captcha, яндекс капча, yandex captcha
 Tested up to: 6.8.2
-Stable tag: 1.2.5
+Stable tag: 1.2.7
 License: GPLv3
 
 Add antispam Yandex SmartCaptcha for your forms with Contact Form 7
@@ -15,7 +15,7 @@ Yandex Captcha protects you against spam and other types of automated abuse. Wit
 
 This plugin uses [Yandex SmartCaptcha](https://yandex.cloud/ru/services/smartcaptcha) service for its main functionality. Please read [terms of use](https://yandex.ru/legal/cloud_terms_smartcaptcha/)
 
-To implement the main plugin functionality, this plugin makes remote requests to yandex smart captcha service (https://smartcaptcha.yandexcloud.net) within three cases:
+To implement the main plugin functionality, this plugin makes remote requests to yandex smart captcha service (https://smartcaptcha.cloud.yandex.ru) within three cases:
  - to check yandex captcha sitekey validity
  - to load captcha challenge
  - to check a solving result
@@ -62,6 +62,13 @@ window.addEventListener('DOMContentLoaded', function() {
 
 
 == Changelog ==
+
+= 1.2.7 =
+* Fix bedrock compatibility
+
+= 1.2.6 =
+* Update smartcaptcha domain to new smartcaptcha.cloud.yandex.ru
+
 = 1.2.5 =
 * Fix Bedroсk compatibility
 

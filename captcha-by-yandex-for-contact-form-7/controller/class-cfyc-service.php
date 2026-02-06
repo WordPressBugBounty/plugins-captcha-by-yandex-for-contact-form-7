@@ -1,17 +1,25 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
-// Универсальный путь для Bedrock и стандартного WordPress
-if (file_exists(WP_PLUGIN_DIR . '/contact-form-7/includes/integration.php')) {
-    require_once WP_PLUGIN_DIR . '/contact-form-7/includes/integration.php';
-} elseif (file_exists(ABSPATH . 'wp-content/plugins/contact-form-7/includes/integration.php')) {
-    require_once ABSPATH . 'wp-content/plugins/contact-form-7/includes/integration.php';
-} else {
-    // Попытка найти файл через WordPress функции
-    $cf7_path = plugin_dir_path(dirname(plugin_dir_path(__FILE__))) . 'contact-form-7/includes/integration.php';
-    if (file_exists($cf7_path)) {
-        require_once $cf7_path;
-    }
+if ( ! class_exists( 'WPCF7_Integration' ) ) {
+	$integration_file = '';
+	
+	// Try WP_PLUGIN_DIR first (standard WordPress and Bedrock)
+	if ( defined( 'WP_PLUGIN_DIR' ) && file_exists( WP_PLUGIN_DIR . '/contact-form-7/includes/integration.php' ) ) {
+		$integration_file = WP_PLUGIN_DIR . '/contact-form-7/includes/integration.php';
+	}
+	// Fallback to WP_CONTENT_DIR/plugins (for compatibility)
+	elseif ( defined( 'WP_CONTENT_DIR' ) && file_exists( WP_CONTENT_DIR . '/plugins/contact-form-7/includes/integration.php' ) ) {
+		$integration_file = WP_CONTENT_DIR . '/plugins/contact-form-7/includes/integration.php';
+	}
+	// Last resort: try ABSPATH wp-content/plugins
+	elseif ( file_exists( ABSPATH . 'wp-content/plugins/contact-form-7/includes/integration.php' ) ) {
+		$integration_file = ABSPATH . 'wp-content/plugins/contact-form-7/includes/integration.php';
+	}
+	
+	if ( $integration_file ) {
+		require_once $integration_file;
+	}
 }
 
 if ( ! class_exists( 'WPCF7_Service' ) ) {
@@ -302,7 +310,7 @@ if ( ! class_exists( 'CFYC_Service' ) ) {
 			$service   = CFYC_Service::get_instance();
 			$siteKey   = $service->get_sitekey();
 			$serverKey = $service->get_secret( $siteKey );
-			$response  = wp_remote_get( 'https://smartcaptcha.yandexcloud.net/validate?secret=' . $serverKey . '&ip=' . $ip . '&token=' . $token );
+			$response  = wp_remote_get( 'https://smartcaptcha.cloud.yandex.ru/validate?secret=' . $serverKey . '&ip=' . $ip . '&token=' . $token );
 
 			// проверка ошибки
 			if ( is_wp_error( $response ) ) {
@@ -324,7 +332,7 @@ if ( ! class_exists( 'CFYC_Service' ) ) {
 		private function verifySiteKey( string $sitekey ): bool {
 			$urlparts = wp_parse_url( site_url() );
 			$domain   = $urlparts['host'];
-			$response = wp_remote_post( 'https://smartcaptcha.yandexcloud.net/check?host=' . $domain . '&sitekey=' . $sitekey );
+			$response = wp_remote_post( 'https://smartcaptcha.cloud.yandex.ru/check?host=' . $domain . '&sitekey=' . $sitekey );
 
 			// проверка ошибки
 			if ( is_wp_error( $response ) ) {
